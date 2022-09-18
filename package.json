@@ -1,5 +1,43 @@
 {
+  "name": "homebridge-ups",
+  "description": "Homebridge plugin for UPS",
+  "displayName": "Homebridge UPS",
+  "author": "Erik Baauw",
+  "license": "Apache-2.0",
+  "version": "0.0.0",
+  "keywords": [
+    "homebridge-plugin",
+    "homekit",
+    "ups",
+    "nut",
+    "uninterruptible power supply",
+    "network ups tools"
+  ],
+  "main": "index.js",
+  "bin": {
+    "ups": "cli/ups.js"
+  },
+  "engines": {
+    "homebridge": "^1.5.0",
+    "node": "^16.17.0"
+  },
   "dependencies": {
-    "homebridge-lib": "~5.6.5"
+    "homebridge-lib": "~5.6.6"
+  },
+  "scripts": {
+    "prepare": "standard && rm -rf out && jsdoc -c jsdoc.json",
+    "test": "standard && echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ebaauw/homebridge-ups.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ebaauw/homebridge-ups/issues"
+  },
+  "homepage": "https://github.com/ebaauw/homebridge-ups#readme",
+  "funding": {
+    "type": "paypal",
+    "url": "https://www.paypal.me/ebaauw/EUR"
   }
 }
