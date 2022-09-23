@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 // homebridge-ups/cli/ups.js
+// Copyright © 2022 Erik Baauw. All rights reserved.
 //
 // Homebridge plugin for UPS.
-// Copyright © 2022 Erik Baauw. All rights reserved.
 //
 // Command line interface to `upsd`.
 
@@ -156,6 +156,8 @@ class Main extends homebridgeLib.CommandLineTool {
             '%s: request %d: %s',
             error.request.name, error.request.id, error.message
           )
+        } else {
+          this.error('%s: %s', this.client.name, error)
         }
       })
       .on('request', (request) => {
