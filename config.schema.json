@@ -1,0 +1,57 @@
+{
+  "pluginAlias": "UPS",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "Homebridge plugin for UPS",
+  "footerDisplay": "",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "description": "Plugin name as displayed in the Homebridge log.",
+        "type": "string",
+        "required": true,
+        "default": "UPS"
+      },
+      "hosts": {
+        "title": "Hosts",
+        "notitle": true,
+        "type": "array",
+        "items": {
+          "description": "<b>Host</b>",
+          "type": "object",
+          "properties": {
+            "host": {
+              "title": "Host",
+              "description": "IP address or hostname and port of upsd.  Default: 'localhost:3493'.",
+              "type": "string",
+              "required": true
+            },
+            "name": {
+              "title": "Name",
+              "description": "The hostname of the host running upsd.",
+              "type": "string"
+            },
+            "username": {
+              "title": "Username",
+              "description": "The username as defined in upsd.users.",
+              "type": "string"
+            },
+            "password": {
+              "title": "Password",
+              "description": "The password as defined in upsd.users.",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "timeout": {
+        "title": "Timeout",
+        "description": "Timeout in seconds.  Default: 15.",
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 60
+      }
+    }
+  }
+}

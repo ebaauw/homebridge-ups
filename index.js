@@ -1,7 +1,7 @@
 // homebridge-ups/index.js
 // Copyright © 2022 Erik Baauw. All rights reserved.
 //
-// Homebridge plugin for deCONZ.
+// Homebridge plugin for UPS.
 
 'use strict'
 
