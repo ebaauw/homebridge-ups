@@ -30,7 +30,7 @@ It provides the following features:
 - Support multiple hosts running `upsd`, support multiple UPS devices per host;
 - Includes `ups` command-line utility for troubleshooting.
 
-Homebridge UPS exposes an accessory for each UPS device, with an _Outlet_ service and a _Battery_ service.
+Homebridge UPS exposes an accessory for each UPS device, with an _Outlet_ service, a _Battery_ service, and a _History_ service for Eve history.
 
 The table below lists the characteristics of the _Outlet_ service,
 mapped to the corresponding
@@ -40,11 +40,13 @@ Characteristic | NUT variable | RW | Description
 -- | -- | -- | --
 _On_ | `ups.state` | R | Indicates whether UPS is using mains power.<br>The characteristic is read/write, but changing it won't do anything.
 _In Use_ | | R | Indicates whether `upsmon` clients are connected.
-_Consumption_ | `ups.realpower.nominal`<br>`ups.load` | R |Current consumption of devices powered through the UPS in Watt.
+_Total Consumption_ | | R | Total lifetime consumption of devices powered through the UPS in kWh.<br>This is computed by Homebridge UPS for the benefit of Eve history, and only reflects the lifetime consumption while Homebridge UPS is running.
+_Consumption_ | `ups.realpower.nominal`<br>`ups.load` | R | Current consumption of devices powered through the UPS in Watt.
 _Voltage_ | `input.voltage` | R |The input voltage of the UPS device.
 _Last Updated_ | | R | The date/time when Homebridge UPS last polled the UPS device through `upsd`.
 _Mute_ | `ups.beeper.status` | RW | Whether the audible alarm is disabled or muted.
-_Status Fault_ | `ups.state`<br>`ups.alarm` | R | Whether the UPS device reports an alarm.<br>The alarm message is logged as a warning to the Homebridge log.
+_Status Fault_ | `ups.state`<br>`ups.alarm` | R | Whether the UPS device reports an alarm.<br>The alarm message is logged as a warning to the Homebridge log and reported under _Last Event_.
+_Last Event_ | `ups.test.result`<br>`ups.alarm` | R | The last test result and alarm message.<br>Issue _Identify_ from HomeKit to start a quick test.
 
 Note that Apple's Home doesn't support all of HomeKit.
 You need another HomeKit app, like [Eve](https://www.evehome.com/en/eve-app),
