@@ -37,8 +37,13 @@
     "url": "https://github.com/ebaauw/homebridge-ups/issues"
   },
   "homepage": "https://github.com/ebaauw/homebridge-ups#readme",
-  "funding": {
-    "type": "paypal",
-    "url": "https://www.paypal.me/ebaauw/EUR"
-  }
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/ebaauw/"
+    }, {
+      "type": "paypal",
+      "url": "https://www.paypal.me/ebaauw/EUR"
+    }
+  ]
 }
