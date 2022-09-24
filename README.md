@@ -6,8 +6,8 @@
 # Homebridge UPS
 [![Downloads](https://img.shields.io/npm/dt/homebridge-ups)](https://www.npmjs.com/package/homebridge-ups)
 [![Version](https://img.shields.io/npm/v/homebridge-ups)](https://www.npmjs.com/package/homebridge-ups)
-<!-- [![Homebridge Discord](https://img.shields.io/discord/432663330281226270?color=728ED5&logo=discord&label=discord)](https://discord.gg/zUhSZSNb4P)
-[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins) -->
+[![Homebridge Discord](https://img.shields.io/discord/432663330281226270?color=728ED5&logo=discord&label=discord)](https://discord.gg/bXmnUwXQR9)
+[![verified-by-homebridge](https://badgen.net/badge/homebridge/verified/purple)](https://github.com/homebridge/homebridge/wiki/Verified-Plugins)
 
 [![GitHub issues](https://img.shields.io/github/issues/ebaauw/homebridge-ups)](https://github.com/ebaauw/homebridge-ups/issues)
 [![GitHub pull requests](https://img.shields.io/github/issues-pr/ebaauw/homebridge-ups)](https://github.com/ebaauw/homebridge-ups/pulls)
@@ -22,7 +22,7 @@ This [Homebridge](https://github.com/homebridge/homebridge) plugin exposes to Ap
 
 It provides the following features:
 - Monitoring the UPS device from HomeKit:
-  - UPS status: on mains power, in use (clients are connected), alarm state, power consumption by connected devices, input voltage;
+  - UPS status: on mains power, in use (clients are connected), alarm state, power consumption by connected devices, input voltage, incl. Eve history for power and consumption;
   - Battery: level, voltage, charging state, remaining duration;
 - Controlling the UPS device from HomeKit:
   - Enabling or disabling the audible alarm;
@@ -31,41 +31,7 @@ It provides the following features:
 - Includes `ups` command-line utility for troubleshooting.
 
 Homebridge UPS exposes an accessory for each UPS device, with an _Outlet_ service, a _Battery_ service, and a _History_ service for Eve history.
-
-The table below lists the characteristics of the _Outlet_ service,
-mapped to the corresponding
-[NUT variable(s)](https://networkupstools.org/docs/developer-guide.chunked/apas02.html).
-
-Characteristic | NUT variable | RW | Description
--- | -- | -- | --
-_On_ | `ups.state` | R | Indicates whether UPS is using mains power.<br>The characteristic is read/write, but changing it won't do anything.
-_In Use_ | | R | Indicates whether `upsmon` clients are connected.
-_Total Consumption_ | | R | Total lifetime consumption of devices powered through the UPS in kWh.<br>This is computed by Homebridge UPS for the benefit of Eve history, and only reflects the lifetime consumption while Homebridge UPS is running.
-_Consumption_ | `ups.realpower.nominal`<br>`ups.load` | R | Current consumption of devices powered through the UPS in Watt.
-_Voltage_ | `input.voltage` | R |The input voltage of the UPS device.
-_Last Updated_ | | R | The date/time when Homebridge UPS last polled the UPS device through `upsd`.
-_Mute_ | `ups.beeper.status` | RW | Whether the audible alarm is disabled or muted.
-_Status Fault_ | `ups.state`<br>`ups.alarm` | R | Whether the UPS device reports an alarm.<br>The alarm message is logged as a warning to the Homebridge log and reported under _Last Event_.
-_Last Event_ | `ups.test.result`<br>`ups.alarm` | R | The last test result and alarm message.<br>Issue _Identify_ from HomeKit to start a quick test.
-
-Note that Apple's Home doesn't support all of HomeKit.
-You need another HomeKit app, like [Eve](https://www.evehome.com/en/eve-app),
-to use the full features of Homebridge UPS.
-
-The _Battery_ service has the following Characteristics:
-
-Characteristic | NUT variable | RW | Description
--- | -- | -- | --
-_Battery Level_ | `battery.charge` | R | Battery level in %.
-_Charging State_ | `ups.state` | R | Whether battery is charging.
-_Low Battery Threshold_ | `battery.charge.low`<br>`ups.state` | RW | Threshold for low battery alarm.<br>Reported as 100% when UPS device reports that battery needs to be changed, so battery alarm is visible in HomeKit.
-_Status Low Battery_ | | R | Computed from _Battery Level_ and _Low Battery Threshold_.
-_Voltage_ | `battery.voltage` | R | The battery voltage.
-_Remaining Duration_ | `battery.runtime` | R | The expected remaining duration, when the UPS is on battery power.
-
-### To Do
-- Eve History
-- Handle `upsd` config changes on reconnect
+See the [Wiki](https://github.com/ebaauw/homebridge-ups/wiki/UPS-Accessory) for details.
 
 ### Prerequisites
 Homebridge UPS connects to the socket provided by `upsd` on port 3493.
@@ -74,13 +40,13 @@ See the [Wiki](https://github.com/ebaauw/homebridge-ups/wiki/NUT-Setup) for deta
 
 ### Configuration
 Homebridge UPS needs a list of host systems running `upsd`, specifying the host (IP address or hostname and port), name, and the username/password from `uspd.users` for each system.
-See the Wiki for details.
+See the [Wiki](https://github.com/ebaauw/homebridge-ups/wiki/Configuration) for details.
 
 Best configure Homebridge UPS through the Homebridge UI.
 
 ### Command-Line Utility
 Homebridge UPS include the `ups` command line utility, to interact with `upsd`.
-See the `upsd Tutorial` for more info.
+Run `ups -h` for more info.
 
 ### Troubleshooting
 Make sure your UPS has been configured correctly, before setting up Homebridge UPS.
@@ -115,3 +81,11 @@ Note that the NUT config files are in `/etc/nut` on Raspberry Pi OS, but in `/et
 If you don't specify them, provide incorrect values, or use an unprivileged username,
 the command to control the UPS device simply times out, with no indication of
 an incorrect or missing username or password.
+
+#### Getting Help
+I do not have the bandwidth to help you setting up your UPS.
+
+If you have a question about Homebridge UPS, please post a message to the **#ups** channel of the Homebridge community on [Discord](https://discord.gg/bXmnUwXQR9).
+
+If you encounter a problem with Homebridge UPS, or want to request a feature or support for a particular UPS device, please open an issue on [GitHub](https://github.com/ebaauw/homebridge-ups/issues).
+Please include the output of `ups info` and the relevant messages in the Homebridge log.
