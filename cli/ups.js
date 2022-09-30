@@ -18,12 +18,14 @@ const { UsageError } = homebridgeLib.CommandLineParser
 
 const usage = {
   ups: `${b('ups')} [${b('-hVD')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-U')} ${u('username')}] [${b('-P')} ${u('password')}] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
-  info: `${b('info')} [${b('-v')}]`
+  info: `${b('info')} [${b('-hv')}]`,
+  test: `${b('test')} [${b('-v')}] [${b('-q')} | ${b('-d')} | ${b('-s')}] [${u('device')}]`
 }
 
 const description = {
   ups: 'Commmand line interface to Network UPS Tools.',
-  info: `Print ${b('upsd')} info.`
+  info: `Print ${b('upsd')} info.`,
+  test: 'Start or stop UPS battery test'
 }
 
 const help = {
@@ -60,6 +62,9 @@ Commands:
   ${usage.info}
   ${description.info}
 
+  ${usage.test}
+  ${description.test}
+
 For more help, issue: ${b('ups')} ${u('command')} ${b('-h')}`,
   info: `${description.info}
 
@@ -70,7 +75,27 @@ Parameters:
   Print this help and exit.
 
   ${b('-v')}, ${b('--verbose')}
-  List variable and command descriptions and variable types.`
+  List variable and command descriptions and variable types.`,
+  test: `${description.test}
+
+Usage: ${b('ups')} ${usage.test}
+
+Parameters:
+  ${b('-h')}, ${b('--help')}
+  Print this help and exit.
+
+  ${b('-q')}, ${b('--quick')}
+  Start a quick battery test.  This is the default.
+
+  ${b('-d')}, ${b('--deep')}
+  Start a deep battery test.
+
+  ${b('-s')}, ${b('--stop')}
+  Stop the battery test.
+
+  ${u('device')}
+  The UPS device.
+  The device can also be specified by setting ${b('UPS_DEVICE')}.`
 }
 
 class Main extends homebridgeLib.CommandLineTool {
@@ -175,7 +200,6 @@ class Main extends homebridgeLib.CommandLineTool {
         )
       })
     try {
-      await this.client.connect()
       this.name = 'ups ' + this.clargs.command
       this.usage = `${b('ups')} ${usage[this.clargs.command]}`
       this.help = help[this.clargs.command]
@@ -205,6 +229,7 @@ class Main extends homebridgeLib.CommandLineTool {
       apiVersion: await this.client.apiVersion(),
       devices: {}
     }
+    await this.client.connect()
     const devices = await this.client.devices()
     for (const id in devices) {
       const device = devices[id]
@@ -233,9 +258,49 @@ class Main extends homebridgeLib.CommandLineTool {
         variables: await device.variables()
       }
       this.print(formatter.stringify(map))
-
-      // await device.command('test.battery.start.quick')
     }
+  }
+
+  async find (device = process.env.UPS_DEVICE) {
+    if (device == null || device === '') {
+      throw new UsageError(
+        `Missing device name.  Set ${b('UPS_DEVICE')} or specify as argument.`
+      )
+    }
+    await this.client.connect()
+    const devices = await this.client.devices()
+    for (const id in devices) {
+      if (device === id) {
+        return devices[id]
+      }
+    }
+    throw new UsageError(
+      `${device}: device not found`
+    )
+  }
+
+  async test (...args) {
+    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const clargs = {
+      options: { sortKeys: true },
+      test: 'quick'
+    }
+    parser
+      .help('h', 'help', this.help)
+      .flag('v', 'verbose', () => { clargs.verbose = true })
+      .flag('q', 'quick', () => { clargs.test = 'quick' })
+      .flag('d', 'deep', () => { clargs.test = 'deep' })
+      .flag('s', 'stop', () => { clargs.test = 'stop' })
+      .remaining((list) => {
+        if (list.length > 1) {
+          throw new UsageError('too many arguments')
+        }
+        clargs.device = list[0]
+      })
+      .parse(...args)
+
+    const device = await this.find(clargs.device)
+    await device.command('test.battery.start.' + clargs.test)
   }
 }
 
