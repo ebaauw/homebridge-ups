@@ -23,7 +23,7 @@
     "upsd": "1.2"
   },
   "dependencies": {
-    "homebridge-lib": "~5.7.1"
+    "homebridge-lib": "~5.7.2"
   },
   "scripts": {
     "prepare": "standard && rm -rf out && jsdoc -c jsdoc.json",
