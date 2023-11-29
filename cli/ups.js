@@ -58,6 +58,9 @@ Parameters:
   ${b('-t')} ${u('timeout')}, ${b('--timeout=')}${u('timeout')}
   Set timeout to ${u('timeout')} seconds instead of default ${b(5)}.
 
+  ${b('-d')} ${u('device')}, ${b('--device=')}${u('device')}
+  Explicitly set UPS ${u('device')} name instead of first in sorted map.
+
 Commands:
   ${usage.info}
   ${description.info}
@@ -142,6 +145,11 @@ class Main extends homebridgeLib.CommandLineTool {
         clargs.options.timeout = homebridgeLib.OptionParser.toInt(
           'timeout', value, 1, 60, true
         )
+      })
+      .option('d', 'device', (value) => {
+        clargs.options.device = homebridgeLib.OptionParser.toString(
+	        'device', value, true
+	      )
       })
       .parameter('command', (value) => {
         if (usage[value] == null || typeof this[value] !== 'function') {
