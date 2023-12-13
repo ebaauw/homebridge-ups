@@ -1,6 +1,6 @@
 {
   "name": "homebridge-ups",
-  "description": "Homebridge plugin for UPS",
+  "description": "Homebridge plugin for Network UPS Tools",
   "displayName": "Homebridge UPS",
   "author": "Erik Baauw",
   "license": "Apache-2.0",
@@ -19,11 +19,11 @@
   },
   "engines": {
     "homebridge": "^1.7.0",
-    "node": "20.9.0||^20||^18",
+    "node": "20.10.0||^20||^18",
     "upsd": "1.2"
   },
   "dependencies": {
-    "homebridge-lib": "~6.6.6"
+    "homebridge-lib": "~6.7.3"
   },
   "scripts": {
     "prepare": "standard && rm -rf out && jsdoc -c jsdoc.json",
