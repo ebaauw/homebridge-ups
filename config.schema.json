@@ -2,7 +2,7 @@
   "pluginAlias": "UPS",
   "pluginType": "platform",
   "singular": true,
-  "headerDisplay": "Homebridge plugin for UPS",
+  "headerDisplay": "Homebridge plugin for Network UPS Tools",
   "footerDisplay": "",
   "schema": {
     "type": "object",
