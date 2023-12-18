@@ -257,8 +257,8 @@ class Main extends homebridgeLib.CommandLineTool {
         constants: clargs.verbose ? varMap : varList,
         variables: await device.variables()
       }
-      this.print(formatter.stringify(map))
     }
+    this.print(formatter.stringify(map))
   }
 
   async find (device = process.env.UPS_DEVICE) {
