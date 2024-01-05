@@ -16,7 +16,7 @@
 </span>
 
 ## Homebridge plugin for Network UPS Tools
-Copyright © 2022-2023 Erik Baauw. All rights reserved.
+Copyright © 2022-2024 Erik Baauw. All rights reserved.
 
 This [Homebridge](https://github.com/homebridge/homebridge) plugin exposes to Apple's [HomeKit](http://www.apple.com/ios/home/) Uninterruptible Power Supply (UPS) devices connected to a host system over [Network UPS Tools (NUT)](https://networkupstools.org).
 
