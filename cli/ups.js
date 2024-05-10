@@ -7,14 +7,20 @@
 //
 // Command line interface to `upsd`.
 
-'use strict'
+import { createRequire } from 'node:module'
 
-const homebridgeLib = require('homebridge-lib')
-const UpsClient = require('../lib/UpsClient')
+import { CommandLineParser } from 'homebridge-lib/CommandLineParser'
+import { CommandLineTool } from 'homebridge-lib/CommandLineTool'
+import { OptionParser } from 'homebridge-lib/OptionParser'
+import { JsonFormatter } from 'homebridge-lib/JsonFormatter'
+
+import { UpsClient } from '../lib/UpsClient.js'
+
+const require = createRequire(import.meta.url)
 const packageJson = require('../package.json')
 
-const { b, u } = homebridgeLib.CommandLineTool
-const { UsageError } = homebridgeLib.CommandLineParser
+const { b, u } = CommandLineTool
+const { UsageError } = CommandLineParser
 
 const usage = {
   ups: `${b('ups')} [${b('-hVD')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-U')} ${u('username')}] [${b('-P')} ${u('password')}] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
@@ -98,14 +104,14 @@ Parameters:
   The device can also be specified by setting ${b('UPS_DEVICE')}.`
 }
 
-class Main extends homebridgeLib.CommandLineTool {
+class Main extends CommandLineTool {
   constructor () {
     super({ mode: 'command', debug: false })
     this.usage = usage.ups
   }
 
   parseArguments () {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       options: {
         host: process.env.UPS_HOST || 'localhost',
@@ -118,16 +124,16 @@ class Main extends homebridgeLib.CommandLineTool {
       .help('h', 'help', help.ups)
       .version('V', 'version')
       .option('H', 'host', (value) => {
-        homebridgeLib.OptionParser.toHost('host', value, false, true)
+        OptionParser.toHost('host', value, false, true)
         clargs.options.host = value
       })
       .option('U', 'username', (value) => {
-        clargs.options.username = homebridgeLib.OptionParser.toString(
+        clargs.options.username = OptionParser.toString(
           'username', value, true
         )
       })
       .option('P', 'password', (value) => {
-        clargs.options.password = homebridgeLib.OptionParser.toString(
+        clargs.options.password = OptionParser.toString(
           'password', value, true
         )
       })
@@ -139,7 +145,7 @@ class Main extends homebridgeLib.CommandLineTool {
         }
       })
       .option('t', 'timeout', (value) => {
-        clargs.options.timeout = homebridgeLib.OptionParser.toInt(
+        clargs.options.timeout = OptionParser.toInt(
           'timeout', value, 1, 60, true
         )
       })
@@ -213,7 +219,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async info (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       options: { sortKeys: true }
     }
@@ -222,7 +228,7 @@ class Main extends homebridgeLib.CommandLineTool {
       .flag('v', 'verbose', () => { clargs.verbose = true })
       .parse(...args)
 
-    const formatter = new homebridgeLib.JsonFormatter()
+    const formatter = new JsonFormatter()
     await this.client.connect()
     const map = {
       version: await this.client.version(),
@@ -280,7 +286,7 @@ class Main extends homebridgeLib.CommandLineTool {
   }
 
   async test (...args) {
-    const parser = new homebridgeLib.CommandLineParser(packageJson)
+    const parser = new CommandLineParser(packageJson)
     const clargs = {
       options: { sortKeys: true },
       test: 'quick'
