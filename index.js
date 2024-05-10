@@ -3,11 +3,15 @@
 //
 // Homebridge plugin for UPS.
 
-'use strict'
+import { createRequire } from 'node:module'
 
-const UpsPlatform = require('./lib/UpsPlatform')
+import { UpsPlatform } from './lib/UpsPlatform.js'
+
+const require = createRequire(import.meta.url)
 const packageJson = require('./package.json')
 
-module.exports = function (homebridge) {
+function main (homebridge) {
   UpsPlatform.loadPlatform(homebridge, packageJson, 'UPS', UpsPlatform)
 }
+
+export { main as default }
