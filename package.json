@@ -13,6 +13,7 @@
     "uninterruptible power supply",
     "network ups tools"
   ],
+  "type": "module",
   "main": "index.js",
   "bin": {
     "ups": "cli/ups.js"
@@ -23,7 +24,7 @@
     "upsd": "1.2"
   },
   "dependencies": {
-    "homebridge-lib": "~6.7.5"
+    "homebridge-lib": "~7.0.1"
   },
   "scripts": {
     "prepare": "standard && rm -rf out && jsdoc -c jsdoc.json",
