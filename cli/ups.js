@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // homebridge-ups/cli/ups.js
-// Copyright © 2022-2024 Erik Baauw. All rights reserved.
+// Copyright © 2022-2025 Erik Baauw. All rights reserved.
 //
 // Homebridge plugin for UPS.
 //
