@@ -18,7 +18,6 @@
         "notitle": true,
         "type": "array",
         "items": {
-          "description": "<b>Host</b>",
           "type": "object",
           "properties": {
             "host": {
