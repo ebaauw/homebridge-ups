@@ -197,12 +197,12 @@ class Main extends CommandLineTool {
         )
       })
       .on('response', (response) => {
+        this.debug(
+          '%s: request %d: OK', response.request.name, response.request.id
+        )
         this.vdebug(
           '%s: request %d: response: %s',
           response.request.name, response.request.id, response.body
-        )
-        this.debug(
-          '%s: request %d: OK', response.request.name, response.request.id
         )
       })
     try {
