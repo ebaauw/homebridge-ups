@@ -124,7 +124,6 @@ class Main extends CommandLineTool {
       .help('h', 'help', help.ups)
       .version('V', 'version')
       .option('H', 'host', (value) => {
-        OptionParser.toHost('host', value, false, true)
         clargs.options.host = value
       })
       .option('U', 'username', (value) => {
@@ -158,6 +157,8 @@ class Main extends CommandLineTool {
       .remaining((list) => { clargs.args = list })
     parser
       .parse()
+    const { hostname } = OptionParser.toHost('host', clargs.options.host, false, true)
+    clargs.options.name = hostname
     return clargs
   }
 
