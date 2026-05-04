@@ -23,8 +23,7 @@
   },
   "engines": {
     "homebridge": "^2.0.0",
-    "node": "^24||^22",
-    "upsd": "1.2"
+    "node": "^24||^22"
   },
   "dependencies": {
     "homebridge-lib": "~8.0.1"
