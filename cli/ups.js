@@ -136,13 +136,7 @@ class Main extends CommandLineTool {
           'password', value, true
         )
       })
-      .flag('D', 'debug', () => {
-        if (this.debugEnabled) {
-          this.setOptions({ vdebug: true })
-        } else {
-          this.setOptions({ debug: true, chalk: true })
-        }
-      })
+      .debug('D', 'debug', this)
       .option('t', 'timeout', (value) => {
         clargs.options.timeout = OptionParser.toInt(
           'timeout', value, 1, 60, true
