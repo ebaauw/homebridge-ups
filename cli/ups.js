@@ -7,20 +7,16 @@
 //
 // Command line interface to `upsd`.
 
-import { createRequire } from 'node:module'
-
-import { CommandLineParser } from 'homebridge-lib/CommandLineParser'
-import { CommandLineTool } from 'homebridge-lib/CommandLineTool'
-import { OptionParser } from 'homebridge-lib/OptionParser'
+import { CommandLineTool, CommandLineParser, UsageError, b, u } from 'homebridge-lib/CommandLineTool'
+import { toHost, toInt, toString } from 'homebridge-lib/OptionParser'
 import { JsonFormatter } from 'homebridge-lib/JsonFormatter'
 
 import { UpsClient } from '../lib/UpsClient.js'
 
+import { createRequire } from 'node:module'
 const require = createRequire(import.meta.url)
-const packageJson = require('../package.json')
-
-const { b, u } = CommandLineTool
-const { UsageError } = CommandLineParser
+const defaultPackageJson = require('../package.json')
+// import defaultPackageJson from '../package.json' with { type: 'json' }
 
 const usage = {
   ups: `${b('ups')} [${b('-hVD')}] [${b('-H')} ${u('hostname')}[${b(':')}${u('port')}]] [${b('-U')} ${u('username')}] [${b('-P')} ${u('password')}] [${b('-t')} ${u('timeout')}] ${u('command')} [${u('argument')} ...]`,
@@ -105,13 +101,13 @@ Parameters:
 }
 
 class Main extends CommandLineTool {
-  constructor () {
-    super({ mode: 'command', debug: false })
+  constructor (packageJson) {
+    super(packageJson ?? defaultPackageJson, { mode: 'command', debug: false })
     this.usage = usage.ups
   }
 
   parseArguments () {
-    const parser = new CommandLineParser(packageJson)
+    const parser = new CommandLineParser(this)
     const clargs = {
       options: {
         host: process.env.UPS_HOST || 'localhost',
@@ -121,25 +117,23 @@ class Main extends CommandLineTool {
       }
     }
     parser
-      .help('h', 'help', help.ups)
-      .version('V', 'version')
-      .option('H', 'host', (value) => {
-        clargs.options.host = value
-      })
+      .helpFlag('h', 'help', help.ups)
+      .versionFlag('V', 'version')
+      .debugFlag('D', 'debug')
+      .option('H', 'host', (value) => { clargs.options.host = value })
       .option('U', 'username', (value) => {
-        clargs.options.username = OptionParser.toString(
-          'username', value, true
+        clargs.options.username = toString(
+          value, { key: 'username', required: true, userInput: true }
         )
       })
       .option('P', 'password', (value) => {
-        clargs.options.password = OptionParser.toString(
-          'password', value, true
+        clargs.options.password = toString(
+          value, { key: 'password', required: true, userInput: true }
         )
       })
-      .debug('D', 'debug', this)
       .option('t', 'timeout', (value) => {
-        clargs.options.timeout = OptionParser.toInt(
-          'timeout', value, 1, 60, true
+        clargs.options.timeout = toInt(
+          value, { key: 'timeout', min: 1, max: 60, userInput: true }
         )
       })
       .parameter('command', (value) => {
@@ -151,7 +145,7 @@ class Main extends CommandLineTool {
       .remaining((list) => { clargs.args = list })
     parser
       .parse()
-    const { hostname } = OptionParser.toHost('host', clargs.options.host, false, true)
+    const { hostname } = toHost('host', clargs.options.host, false, true)
     clargs.options.name = hostname
     return clargs
   }
@@ -214,12 +208,12 @@ class Main extends CommandLineTool {
   }
 
   async info (...args) {
-    const parser = new CommandLineParser(packageJson)
+    const parser = new CommandLineParser(this)
     const clargs = {
       options: { sortKeys: true }
     }
     parser
-      .help('h', 'help', this.help)
+      .helpFlag('h', 'help', this.help)
       .flag('v', 'verbose', () => { clargs.verbose = true })
       .parse(...args)
 
@@ -281,13 +275,13 @@ class Main extends CommandLineTool {
   }
 
   async test (...args) {
-    const parser = new CommandLineParser(packageJson)
+    const parser = new CommandLineParser(this)
     const clargs = {
       options: { sortKeys: true },
       test: 'quick'
     }
     parser
-      .help('h', 'help', this.help)
+      .helpFlag('h', 'help', this.help)
       .flag('v', 'verbose', () => { clargs.verbose = true })
       .flag('q', 'quick', () => { clargs.test = 'quick' })
       .flag('d', 'deep', () => { clargs.test = 'deep' })
